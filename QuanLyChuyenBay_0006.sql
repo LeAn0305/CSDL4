@@ -1,4 +1,4 @@
-﻿CREATE DATABASE QuanLyChuyenBay_0006
+CREATE DATABASE QuanLyChuyenBay_0006
 GO
 USE QuanLyChuyenBay_0006
 GO
@@ -460,10 +460,10 @@ SELECT NV.MaNV , NV.Ten , COUNT(DISTINCT CB.MaCB) [Số Chuyến Bay Mà Nhân V
 FROM NHANVIEN NV
 CROSS JOIN CHUYENBAY CB 
 WHERE CB.GaDi = 'SGN' AND EXISTS(
-										SELECT 1
-										FROM CHUNGNHAN CN
-										WHERE CN.MaNV = NV.MaNV AND CN.MaMB = CB.MaMB
-									)
+									SELECT 1
+									FROM CHUNGNHAN CN
+									WHERE CN.MaNV = NV.MaNV AND CN.MaMB = CB.MaMB
+								)
 GROUP BY NV.MaNV , NV.Ten
 
 --Câu 10 : Với Mỗi Nhân Viên Cho Biết Mã Số , Tên Phi Công Và Tổng Số Chuyến Bay Xuất Từ Sài Gòn Mà Nhân Viên Đó Không Thể Lái
@@ -471,10 +471,10 @@ SELECT NV.MaNV , NV.Ten , COUNT(DISTINCT CB.MaCB) [Số Chuyến Bay Mà Nhân V
 FROM NHANVIEN NV
 CROSS JOIN CHUYENBAY CB 
 WHERE CB.GaDi = 'SGN' AND NOT EXISTS(
-										SELECT 1
-										FROM CHUNGNHAN CN
-										WHERE CN.MaNV = NV.MaNV AND CN.MaMB = CB.MaMB
-									)
+									SELECT 1
+									FROM CHUNGNHAN CN
+									WHERE CN.MaNV = NV.MaNV AND CN.MaMB = CB.MaMB
+								)
 GROUP BY NV.MaNV , NV.Ten
 
 --Câu 11 Với Mỗi Phi Công Cho Biết Mã Số , Tên Nhân Viên Và Tổng Số Chuyến Bay Xuất Phát Từ Sài Gòn Mà Nhân Viên Đó Có Thể Lái
@@ -496,16 +496,16 @@ GROUP BY NV.MaNV , NV.Ten
 --Câu 12 : Với Mỗi Phi Công Cho Biết Mã Số , Tên Phi Công Và Tổng Số Chuyến Bay Xuất Phát Từ Sài Gòn Mà Phi Công Đó Không Thể Lái
 SELECT NV.MaNV , NV.Ten , COUNT(DISTINCT CB.MaCB) [Tổng Số Chuyến Bay Mà Phi Công Đó Không Thể Lái Từ Sài Gòn]
 FROM (
-		SELECT DISTINCT NV.MaNV, NV.Ten
-		FROM NHANVIEN NV
-		JOIN CHUNGNHAN CN ON NV.MaNV = CN.MaNV
-	)NV
+	SELECT DISTINCT NV.MaNV, NV.Ten
+	FROM NHANVIEN NV
+	JOIN CHUNGNHAN CN ON NV.MaNV = CN.MaNV
+)NV
 CROSS JOIN CHUYENBAY CB
 WHERE CB.GaDi = 'SGN' AND NOT EXISTS(
-										SELECT 1
-										FROM CHUNGNHAN CN
-										WHERE CN.MaNV = NV.MaNV AND CN.MaMB = CB.MaMB
-									)
+									SELECT 1
+									FROM CHUNGNHAN CN
+									WHERE CN.MaNV = NV.MaNV AND CN.MaMB = CB.MaMB
+								)
 GROUP BY NV.MaNV , NV.Ten
 
 --Câu 13 : Với Mỗi Chuyến Bay Cho Biết Mẫ Sô Chuyên Bay Và Tổng Số Loại Máy Bay Không Thể Thực Hiện Chuyến Bay Đó
@@ -527,11 +527,11 @@ SELECT CB.MaCB , COUNT(DISTINCT NV.MaNV) [Tổng Số Nhân Viên Không Thể L
 FROM CHUYENBAY CB
 CROSS JOIN NHANVIEN NV
 WHERE NOT EXISTS(
-					SELECT 1
-					FROM CHUNGNHAN CN
-					JOIN MAYBAY MB ON CN.MaMB = MB.MaMB
-					WHERE CN.MaNV = NV.MaNV AND MB.TamBay >= CB.DoDai
-				)
+				SELECT 1
+				FROM CHUNGNHAN CN
+				JOIN MAYBAY MB ON CN.MaMB = MB.MaMB
+				WHERE CN.MaNV = NV.MaNV AND MB.TamBay >= CB.DoDai
+			)
 GROUP BY CB.MaCB
 
 --câu 16 : Với Mỗi Chuyến Bay Cho Biết Mã Số Chuyến Bay Và Tổng Số Phi Công Không Thể Lái Chuyến Bay Đó
